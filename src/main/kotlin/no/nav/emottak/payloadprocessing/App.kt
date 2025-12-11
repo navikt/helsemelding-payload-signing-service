@@ -12,6 +12,7 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.awaitCancellation
 import no.nav.emottak.payloadprocessing.plugin.configureMetrics
 import no.nav.emottak.payloadprocessing.plugin.configureRoutes
+import no.nav.emottak.payloadprocessing.service.ProcessingService
 
 private val log = KotlinLogging.logger {}
 
@@ -36,9 +37,11 @@ fun main() = SuspendApp {
 internal fun payloadProcessingModule(
     meterRegistry: PrometheusMeterRegistry
 ): Application.() -> Unit {
+    val processingService = ProcessingService()
+
     return {
         configureMetrics(meterRegistry)
-        configureRoutes(meterRegistry)
+        configureRoutes(processingService, meterRegistry)
     }
 }
 
