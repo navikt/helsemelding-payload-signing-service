@@ -60,4 +60,11 @@ spec:
       rules:
         - application: state-service
           cluster: dev-gcp
+  envFrom:
+    - secret: ebms-keystore-pwd-2025
+  filesFrom:
+    - secret: ebms-keystore-2025
+      mountPath: /var/run/secrets/ebms-keystore-2025
   env:
+    - name: KEYSTORE_FILE_SIGN_2025
+      value: /var/run/secrets/ebms-keystore-2025/nav_signing_test.p12
