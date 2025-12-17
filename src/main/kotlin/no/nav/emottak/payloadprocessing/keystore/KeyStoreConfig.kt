@@ -5,8 +5,6 @@ import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import kotlin.io.readBytes
-import kotlin.jvm.java
 
 private val log = KotlinLogging.logger {}
 
@@ -15,21 +13,21 @@ data class KeyStoreConfig(
     val keyStorePass: String,
     val keyStoreType: String
 ) {
-    val keyStoreFile: InputStream = getKeyStoreFile(keyStoreFilePath)
-
-    private fun getKeyStoreFile(path: String): InputStream {
+    fun openKeyStoreInputStream(): InputStream {
         return try {
-            log.debug { "Getting store file from $path" }
-            if (File(path).exists()) {
-                log.info { "Getting store file from file <$path>" }
-                FileInputStream(path)
+            log.debug { "Getting store file from $keyStoreFilePath" }
+            if (File(keyStoreFilePath).exists()) {
+                log.info { "Getting store file from file <$keyStoreFilePath>" }
+                FileInputStream(keyStoreFilePath)
             } else {
-                log.info { "Getting store file from resources <$path>" }
-                ByteArrayInputStream(this::class.java.classLoader.getResourceAsStream(path).readBytes())
+                log.info { "Getting store file from resources <$keyStoreFilePath>" }
+                val resourceBytes = this::class.java.classLoader.getResourceAsStream(keyStoreFilePath)?.readBytes()
+                    ?: throw RuntimeException("Resource not found: $keyStoreFilePath")
+                ByteArrayInputStream(resourceBytes)
             }
         } catch (e: Exception) {
-            log.error(e) { "${"Failed to load keystore $path"}" }
-            throw kotlin.RuntimeException("Failed to load keystore $path", e)
+            log.error(e) { "Failed to load keystore $keyStoreFilePath" }
+            throw RuntimeException("Failed to load keystore $keyStoreFilePath", e)
         }
     }
 }

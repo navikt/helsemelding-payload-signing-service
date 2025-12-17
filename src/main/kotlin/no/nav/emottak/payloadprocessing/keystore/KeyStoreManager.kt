@@ -12,7 +12,6 @@ import kotlin.collections.forEach
 import kotlin.collections.iterator
 import kotlin.collections.map
 import kotlin.collections.toList
-import kotlin.jvm.javaClass
 import kotlin.let
 import kotlin.sequences.asSequence
 import kotlin.sequences.firstOrNull
@@ -44,7 +43,7 @@ class KeyStoreManager(private vararg val keyStoreConfig: KeyStoreConfig) {
                 KeyStore.getInstance(config.keyStoreType)
                     .apply {
                         try {
-                            load(config.keyStoreFile, config.keyStorePass.toCharArray())
+                            load(config.openKeyStoreInputStream(), config.keyStorePass.toCharArray())
                         } catch (e: Exception) {
                             log.error(e) { "Failed to load keystore: $config" }
                         }
