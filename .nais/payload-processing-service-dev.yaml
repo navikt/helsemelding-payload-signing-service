@@ -61,10 +61,10 @@ spec:
         - application: state-service
           cluster: dev-gcp
   envFrom:
-    - secret: ebms-keystore-pwd-2025
+    - secret: dialog-keystore-pwd
   filesFrom:
-    - secret: ebms-keystore-2025
-      mountPath: /var/run/secrets/ebms-keystore-2025
+    - secret: dialog-keystore
+      mountPath: /var/run/secrets/dialog-keystore
   env:
     - name: KEYSTORE_FILE_SIGN
-      value: /var/run/secrets/ebms-keystore-2025/nav_signing_test.p12
+      value: /var/run/secrets/dialog-keystore/nav_signing_test.p12
