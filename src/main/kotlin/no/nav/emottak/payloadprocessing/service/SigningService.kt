@@ -1,6 +1,5 @@
 package no.nav.emottak.payloadprocessing.service
 
-import no.nav.emottak.payloadprocessing.config
 import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
 import no.nav.emottak.payloadprocessing.model.SignatureDetails
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -17,15 +16,15 @@ import javax.xml.crypto.dsig.XMLSignatureFactory
 import javax.xml.crypto.dsig.dom.DOMSignContext
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec
 import javax.xml.crypto.dsig.spec.TransformParameterSpec
-import kotlin.collections.toTypedArray
 
-class SigningService {
+class SigningService(
+    val keyStoreManager: KeyStoreManager
+) {
 
     private val digestAlgorithm: String = "http://www.w3.org/2001/04/xmlenc#sha256"
     private val canonicalizationMethod: String = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
     private val signatureAlgorithm: String = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
 
-    private val keyStore: KeyStoreManager = KeyStoreManager(*config().signing.toTypedArray())
     private val factory = XMLSignatureFactory.getInstance("DOM")
     private val provider = BouncyCastleProvider()
 
@@ -51,7 +50,7 @@ class SigningService {
         signerCertificate: X509Certificate,
         document: Document
     ): DOMSignContext {
-        val signerKey = keyStore.getPrivateKey(signerCertificate.serialNumber)
+        val signerKey = keyStoreManager.getPrivateKey(signerCertificate.serialNumber)
             ?: throw SignatureException(
                 "Fant ikke key for sertifikat med subject ${signerCertificate.subjectX500Principal.name} " +
                     "og serienummer ${signerCertificate.serialNumber} i keystore"

@@ -66,5 +66,5 @@ spec:
     - secret: ebms-keystore-2025
       mountPath: /var/run/secrets/ebms-keystore-2025
   env:
-    - name: KEYSTORE_FILE_SIGN_2025
+    - name: KEYSTORE_FILE_SIGN
       value: /var/run/secrets/ebms-keystore-2025/nav_signing_test.p12

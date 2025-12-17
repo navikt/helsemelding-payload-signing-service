@@ -46,7 +46,7 @@ class KeyStoreManager(private vararg val keyStoreConfig: KeyStoreConfig) {
                         try {
                             load(config.keyStoreFile, config.keyStorePass.toCharArray())
                         } catch (e: Exception) {
-                            log.error(e) { "${"Failed to load keystore: ${config.javaClass.name}"}" }
+                            log.error(e) { "Failed to load keystore: $config" }
                         }
                     },
                 config
