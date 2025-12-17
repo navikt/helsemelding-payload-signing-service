@@ -1,14 +1,14 @@
 package no.nav.emottak.payloadprocessing.service
 
 import io.kotest.core.spec.style.StringSpec
-import java.io.InputStream
-import javax.xml.parsers.DocumentBuilderFactory
 import no.nav.emottak.payloadprocessing.config
 import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
 import no.nav.emottak.payloadprocessing.model.SignatureDetails
 import org.apache.commons.codec.binary.Base64
 import org.junit.jupiter.api.Assertions
 import org.w3c.dom.Document
+import java.io.InputStream
+import javax.xml.parsers.DocumentBuilderFactory
 
 class SigningServiceTest : StringSpec({
 
