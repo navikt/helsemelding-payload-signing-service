@@ -37,6 +37,10 @@ class KeyStoreManager(private vararg val keyStoreConfig: KeyStoreConfig) {
         return null
     }
 
+    fun getCertificate(alias: String): X509Certificate {
+        return keyStores.firstNotNullOf { (store) -> store.getCertificate(alias) as X509Certificate }
+    }
+
     private fun keyStoreResolver(): List<Pair<KeyStore, KeyStoreConfig>> {
         return keyStoreConfig.map { config ->
             Pair<KeyStore, KeyStoreConfig>(

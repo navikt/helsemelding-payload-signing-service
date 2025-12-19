@@ -68,3 +68,5 @@ spec:
   env:
     - name: KEYSTORE_FILE_SIGN
       value: /var/run/secrets/dialog-keystore/nav_signing_test.p12
+    - name: NAV_CERTIFICATE_ALIAS
+      value: nav_virksomhet

@@ -1,7 +1,7 @@
 package no.nav.emottak.payloadprocessing.service
 
+import no.nav.emottak.payloadprocessing.config
 import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
-import no.nav.emottak.payloadprocessing.model.SignatureDetails
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
@@ -28,10 +28,12 @@ class SigningService(
     private val factory = XMLSignatureFactory.getInstance("DOM")
     private val provider = BouncyCastleProvider()
 
-    fun signXml(document: Document, signatureDetails: SignatureDetails): Document {
-        val signerCertificate: X509Certificate = createX509Certificate(signatureDetails.certificate)
-        val signingContext = buildSigningContext(signerCertificate, document)
-        val signature = buildXmlSignature(signerCertificate)
+    fun signXml(document: Document): Document {
+        val certificateBytes = keyStoreManager.getCertificate(config().signing.certificateAlias).encoded
+        val certificate: X509Certificate = createX509Certificate(certificateBytes)
+
+        val signingContext = buildSigningContext(certificate, document)
+        val signature = buildXmlSignature(certificate)
 
         signature.sign(signingContext)
         return document

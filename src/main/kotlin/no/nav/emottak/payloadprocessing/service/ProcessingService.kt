@@ -3,7 +3,6 @@ package no.nav.emottak.payloadprocessing.service
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.emottak.payloadprocessing.model.PayloadRequest
 import no.nav.emottak.payloadprocessing.model.PayloadResponse
-import no.nav.emottak.payloadprocessing.model.SignatureDetails
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -24,14 +23,8 @@ class ProcessingService(
     }
 
     fun processOutgoing(request: PayloadRequest): PayloadResponse {
-        val signatureDetails = SignatureDetails(
-            certificate = "deferfr".toByteArray(),
-            signatureAlgorithm = "rsa-sha256",
-            hashFunction = "sha256"
-        )
-
         val xmlDocument = request.bytes.toXmlDocument()
-        val signedDocument: Document = signingService.signXml(xmlDocument, signatureDetails)
+        val signedDocument: Document = signingService.signXml(xmlDocument)
 
         return PayloadResponse(signedDocument.toByteArray())
     }

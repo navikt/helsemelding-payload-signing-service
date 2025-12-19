@@ -39,7 +39,7 @@ fun main() = SuspendApp {
 internal fun payloadProcessingModule(
     meterRegistry: PrometheusMeterRegistry
 ): Application.() -> Unit {
-    val keyStoreManager = KeyStoreManager(*config().signing.toTypedArray())
+    val keyStoreManager = KeyStoreManager(*config().keyStore.toTypedArray())
     val signingService = SigningService(keyStoreManager)
     val processingService = ProcessingService(signingService)
 
