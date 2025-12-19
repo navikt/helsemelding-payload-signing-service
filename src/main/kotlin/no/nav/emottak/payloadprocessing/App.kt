@@ -13,6 +13,7 @@ import kotlinx.coroutines.awaitCancellation
 import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
 import no.nav.emottak.payloadprocessing.plugin.configureMetrics
 import no.nav.emottak.payloadprocessing.plugin.configureRoutes
+import no.nav.emottak.payloadprocessing.plugin.installContentNegotiation
 import no.nav.emottak.payloadprocessing.service.ProcessingService
 import no.nav.emottak.payloadprocessing.service.SigningService
 
@@ -44,6 +45,7 @@ internal fun payloadProcessingModule(
     val processingService = ProcessingService(signingService)
 
     return {
+        installContentNegotiation()
         configureMetrics(meterRegistry)
         configureRoutes(processingService, meterRegistry)
     }

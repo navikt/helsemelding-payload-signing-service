@@ -24,10 +24,10 @@ class SigningServiceTest : StringSpec({
     }
 }) {
     companion object {
-        fun createDocument(inputstream: InputStream): Document {
+        fun createDocument(inputStream: InputStream): Document {
             val dbf = DocumentBuilderFactory.newInstance()
             dbf.isNamespaceAware = true
-            return dbf.newDocumentBuilder().parse(inputstream)
+            return dbf.newDocumentBuilder().parse(inputStream)
         }
     }
 }
