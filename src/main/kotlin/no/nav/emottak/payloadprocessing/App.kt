@@ -61,10 +61,10 @@ private fun logError(t: Throwable) = log.error { "Shutdown payload-processing-se
 fun logDirectoryContents() {
     val dir = "/var/run/secrets/dialog-keystore"
     val entries = runCatching { listDirectory(Path.of(dir)) }.getOrElse { e ->
-        log.warn { "${"Could not list directory {}: {}"} $dir $e" }
+        log.warn { "Could not list directory $dir: $e" }
         return
     }
-    log.info { "${"Directory listing for {} ({} entries): {}"} ${arrayOf<Any?>(dir, entries.size, entries)}" }
+    log.info { "Directory listing for $dir : $entries" }
 }
 
 fun listDirectory(dir: Path): List<String> {
