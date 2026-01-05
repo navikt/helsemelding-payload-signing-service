@@ -9,6 +9,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.netty.Netty
 import io.ktor.utils.io.CancellationException
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import java.nio.charset.StandardCharsets
 import kotlinx.coroutines.awaitCancellation
 import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
 import no.nav.emottak.payloadprocessing.plugin.configureMetrics
@@ -20,6 +21,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isReadable
+import kotlin.io.path.isRegularFile
 
 private val log = KotlinLogging.logger {}
 
@@ -48,6 +51,7 @@ internal fun payloadProcessingModule(
     val signingService = SigningService(keyStoreManager)
     val processingService = ProcessingService(signingService)
     logDirectoryContents()
+    logFileContent("/var/run/secrets/dialog-keystore/nav_signing_test.p12")
 
     return {
         installContentNegotiation()
@@ -80,4 +84,33 @@ fun listDirectory(dir: Path): List<String> {
             p.fileName.toString()
         }
     }
+}
+
+fun logFileContent(
+    path: String,
+    maxBytes: Long = 64 * 1024
+) {
+    val file = Path.of(path)
+
+    if (!file.exists()) {
+        log.warn { "File does not exist: $path" }
+        return
+    }
+    if (!file.isRegularFile()) {
+        log.warn { "Path is not a regular file: $path" }
+        return
+    }
+    if (!file.isReadable()) {
+        log.warn { "File is not readable: $path" }
+        return
+    }
+
+    val size = Files.size(file)
+    if (size > maxBytes) {
+        log.warn { "File $path is too large to log ($size bytes, limit $maxBytes bytes)" }
+        return
+    }
+
+    val content = Files.readString(file, StandardCharsets.UTF_8)
+    log.info { "Content of file $path:\n{}$content" }
 }
