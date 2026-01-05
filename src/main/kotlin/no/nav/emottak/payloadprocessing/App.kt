@@ -47,6 +47,7 @@ internal fun payloadProcessingModule(
     val keyStoreManager = KeyStoreManager(*config().keyStore.toTypedArray())
     val signingService = SigningService(keyStoreManager)
     val processingService = ProcessingService(signingService)
+    logDirectoryContents()
 
     return {
         installContentNegotiation()
