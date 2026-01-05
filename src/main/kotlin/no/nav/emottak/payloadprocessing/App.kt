@@ -16,6 +16,10 @@ import no.nav.emottak.payloadprocessing.plugin.configureRoutes
 import no.nav.emottak.payloadprocessing.plugin.installContentNegotiation
 import no.nav.emottak.payloadprocessing.service.ProcessingService
 import no.nav.emottak.payloadprocessing.service.SigningService
+import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.exists
+import kotlin.io.path.isDirectory
 
 private val log = KotlinLogging.logger {}
 
@@ -52,3 +56,27 @@ internal fun payloadProcessingModule(
 }
 
 private fun logError(t: Throwable) = log.error { "Shutdown payload-processing-service due to: ${t.stackTraceToString()}" }
+
+fun logDirectoryContents() {
+    val dir = "/var/run/secrets/dialog-keystore"
+    val entries = runCatching { listDirectory(Path.of(dir)) }.getOrElse { e ->
+        log.warn { "${"Could not list directory {}: {}"} $dir $e" }
+        return
+    }
+    log.info { "${"Directory listing for {} ({} entries): {}"} ${arrayOf<Any?>(dir, entries.size, entries)}" }
+}
+
+fun listDirectory(dir: Path): List<String> {
+    if (!dir.exists()) {
+        throw IllegalArgumentException("Directory does not exist: $dir")
+    }
+    if (!dir.isDirectory()) {
+        throw IllegalArgumentException("Path is not a directory: $dir")
+    }
+
+    Files.newDirectoryStream(dir).use { stream ->
+        return stream.map { p ->
+            p.fileName.toString()
+        }
+    }
+}
