@@ -51,7 +51,7 @@ internal fun payloadProcessingModule(
     val signingService = SigningService(keyStoreManager)
     val processingService = ProcessingService(signingService)
     logDirectoryContents()
-    logFileContent("/var/run/secrets/dialog-keystore/nav_signing_test.p12")
+    //logFileContent("/var/run/secrets/dialog-keystore/nav_signing_test.p12")
 
     return {
         installContentNegotiation()
