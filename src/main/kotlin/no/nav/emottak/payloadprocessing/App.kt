@@ -9,7 +9,6 @@ import io.ktor.server.application.Application
 import io.ktor.server.netty.Netty
 import io.ktor.utils.io.CancellationException
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import java.nio.charset.StandardCharsets
 import kotlinx.coroutines.awaitCancellation
 import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
 import no.nav.emottak.payloadprocessing.plugin.configureMetrics
@@ -17,6 +16,7 @@ import no.nav.emottak.payloadprocessing.plugin.configureRoutes
 import no.nav.emottak.payloadprocessing.plugin.installContentNegotiation
 import no.nav.emottak.payloadprocessing.service.ProcessingService
 import no.nav.emottak.payloadprocessing.service.SigningService
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.exists
