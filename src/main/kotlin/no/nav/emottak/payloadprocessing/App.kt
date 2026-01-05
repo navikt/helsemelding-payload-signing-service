@@ -112,5 +112,5 @@ fun logFileContent(
     }
 
     val content = Files.readString(file, StandardCharsets.UTF_8)
-    log.info { "Content of file $path:\n{}$content" }
+    log.info { "Content of file $path:\n $content" }
 }
