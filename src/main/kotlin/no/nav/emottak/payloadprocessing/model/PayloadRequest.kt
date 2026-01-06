@@ -5,6 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PayloadRequest(
     val direction: Direction,
-    val bytes: ByteArray,
-    val contentType: String
+    val bytes: ByteArray
 )
