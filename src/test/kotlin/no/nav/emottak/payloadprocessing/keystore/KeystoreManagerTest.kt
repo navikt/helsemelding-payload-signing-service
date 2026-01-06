@@ -25,7 +25,7 @@ class KeystoreManagerTest : StringSpec({
         Assertions.assertEquals(VALID_CERTIFICATE, encodedCertificate)
     }
 
-    "getPrivateKey should return a key from the keystore" {
+    "getPrivateKey should return a matching private key from the keystore" {
         val keyStoreManager = KeyStoreManager(*config().keyStore.toTypedArray())
         val validCertificate = parseCertificate(VALID_CERTIFICATE)
 

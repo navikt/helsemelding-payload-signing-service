@@ -63,7 +63,7 @@ spec:
   envFrom:
     - secret: dialog-keystore-pwd
   filesFrom:
-    - secret: dialog-keystore-v2
+    - secret: dialog-keystore
       mountPath: /var/run/secrets/dialog-keystore
   env:
     - name: KEYSTORE_FILE_SIGN
