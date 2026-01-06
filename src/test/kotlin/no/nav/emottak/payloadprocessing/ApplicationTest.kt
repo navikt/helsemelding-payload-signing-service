@@ -61,8 +61,7 @@ class ApplicationTest : StringSpec({
             // Send POST request to /payload
             val request = PayloadRequest(
                 direction = Direction.OUT,
-                bytes = unsignedMessageBytes,
-                contentType = "application/xml"
+                bytes = unsignedMessageBytes
             )
             val response = httpClient.post("/payload") {
                 contentType(Json)
