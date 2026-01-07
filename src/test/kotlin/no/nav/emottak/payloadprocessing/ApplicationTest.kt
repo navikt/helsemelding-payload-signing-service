@@ -78,9 +78,9 @@ class ApplicationTest : StringSpec({
 }) {
     companion object {
         fun createDocument(inputStream: InputStream): Document {
-            val dbf = DocumentBuilderFactory.newInstance()
-            dbf.isNamespaceAware = true
-            return dbf.newDocumentBuilder().parse(inputStream)
+            val documentBuilderFactory = DocumentBuilderFactory.newInstance()
+            documentBuilderFactory.isNamespaceAware = true
+            return documentBuilderFactory.newDocumentBuilder().parse(inputStream)
         }
     }
 }

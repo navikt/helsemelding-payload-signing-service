@@ -40,9 +40,9 @@ class SigningService(
     }
 
     private fun createX509Certificate(byteArray: ByteArray): X509Certificate {
-        val cf = CertificateFactory.getInstance("X.509", provider)
+        val certificateFactory = CertificateFactory.getInstance("X.509", provider)
         return try {
-            cf.generateCertificate(ByteArrayInputStream(byteArray)) as X509Certificate
+            certificateFactory.generateCertificate(ByteArrayInputStream(byteArray)) as X509Certificate
         } catch (e: CertificateException) {
             throw RuntimeException("Can not create X509Certificate from ByteArray", e)
         }

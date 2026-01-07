@@ -31,12 +31,12 @@ class ProcessingService(
 }
 
 fun ByteArray.toXmlDocument(): Document {
-    val dbf = DocumentBuilderFactory.newInstance()
-    dbf.isNamespaceAware = true
+    val documentBuilderFactory = DocumentBuilderFactory.newInstance()
+    documentBuilderFactory.isNamespaceAware = true
 
     val inputStream = ByteArrayInputStream(this)
 
-    return dbf.newDocumentBuilder().parse(inputStream)
+    return documentBuilderFactory.newDocumentBuilder().parse(inputStream)
 }
 
 fun Document.toByteArray(): ByteArray {
