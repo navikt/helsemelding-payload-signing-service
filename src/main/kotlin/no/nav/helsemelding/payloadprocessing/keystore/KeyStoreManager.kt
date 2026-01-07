@@ -56,11 +56,11 @@ class KeyStoreManager(private vararg val keyStoreConfig: KeyStoreConfig) {
         config.openKeyStoreInputStream()
             .mapLeft { KeyStoreResolverError.Input(config, it) }
             .flatMap { input ->
-                val ks = KeyStore.getInstance(config.keyStoreType)
+                val keyStore = KeyStore.getInstance(config.keyStoreType)
                 Either.catch {
-                    input.use { ks.load(it, config.keyStorePass.toCharArray()) }
+                    input.use { keyStore.load(it, config.keyStorePass.toCharArray()) }
                     log.debug { "Keystore loaded successfully: ${config.keyStoreFilePath}" }
-                    ks
+                    keyStore
                 }
                     .mapLeft { t -> KeyStoreResolverError.LoadFailed(config, t) }
             }
