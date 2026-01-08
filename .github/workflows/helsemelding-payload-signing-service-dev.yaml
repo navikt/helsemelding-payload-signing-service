@@ -1,4 +1,4 @@
-name: "Build and deploy payload-processing-service to dev"
+name: "Build and deploy helsemelding-payload-signing-service to dev"
 on:
   workflow_dispatch:
   push:
@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  MODULE_NAME: "payload-processing-service"
-  NAIS_MANIFEST: "payload-processing-service-dev.yaml"
+  MODULE_NAME: "helsemelding-payload-signing-service"
+  NAIS_MANIFEST: "helsemelding-payload-signing-service-dev.yaml"
 
 jobs:
   build-and-push:
@@ -50,7 +50,7 @@ jobs:
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
-          team: team-emottak # required
+          team: helsemelding # required
           tag: ${{ github.sha }}
           dockerfile: Dockerfile # optional, default Dockerfile
     outputs:

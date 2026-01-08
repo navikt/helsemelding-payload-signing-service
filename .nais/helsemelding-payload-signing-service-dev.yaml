@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: "payload-processing-service"
-  namespace: "team-emottak"
+  name: "helsemelding-payload-signing-service"
+  namespace: "helsemelding"
   labels:
-    "team": "team-emottak"
+    "team": "helsemelding"
   annotations:
     texas.nais.io/enabled: "true"
 spec:
@@ -53,7 +53,7 @@ spec:
       cpu: "200m"
       memory: "512Mi"
   ingresses:
-    - "https://payload-processing-service.intern.dev.nav.no"
+    - "https://helsemelding-payload-signing-service.intern.dev.nav.no"
   accessPolicy:
     outbound:
     inbound:

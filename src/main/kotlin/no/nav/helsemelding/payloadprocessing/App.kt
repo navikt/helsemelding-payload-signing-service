@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing
+package no.nav.helsemelding.payloadprocessing
 
 import arrow.continuations.SuspendApp
 import arrow.continuations.ktor.server
@@ -10,8 +10,8 @@ import io.ktor.server.netty.Netty
 import io.ktor.utils.io.CancellationException
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.awaitCancellation
-import no.nav.emottak.payloadprocessing.plugin.configureMetrics
-import no.nav.emottak.payloadprocessing.plugin.configureRoutes
+import no.nav.helsemelding.payloadprocessing.plugin.configureMetrics
+import no.nav.helsemelding.payloadprocessing.plugin.configureRoutes
 
 private val log = KotlinLogging.logger {}
 
@@ -42,4 +42,4 @@ internal fun payloadProcessingModule(
     }
 }
 
-private fun logError(t: Throwable) = log.error { "Shutdown payload-processing-service due to: ${t.stackTraceToString()}" }
+private fun logError(t: Throwable) = log.error { "Shutdown Helsemelding payload signing service due to: ${t.stackTraceToString()}" }

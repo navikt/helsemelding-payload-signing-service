@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing
+package no.nav.helsemelding.payloadprocessing
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
