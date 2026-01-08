@@ -32,16 +32,15 @@ data class KeyStoreConfig(
                 }
             }
 
-    private fun openFromFile(path: String): Either<KeyStoreError, InputStream> {
-        val file = File(path)
-        if (!file.exists()) return KeyStoreError.FileNotFound(path).left()
-
-        log.info { "Getting store file from file <$path>" }
-
-        return Either
-            .catch { FileInputStream(file) }
-            .mapLeft { KeyStoreError.FileOpenFailed(path, it) }
-    }
+    private fun openFromFile(path: String): Either<KeyStoreError, InputStream> =
+        File(path)
+            .takeIf(File::exists)
+            ?.also { log.info { "Getting store file from file <$path>" } }
+            ?.let { file ->
+                Either.catch { FileInputStream(file) }
+                    .mapLeft { KeyStoreError.FileOpenFailed(path, it) }
+            }
+            ?: KeyStoreError.FileNotFound(path).left()
 
     private fun openFromClasspath(path: String): Either<KeyStoreError, InputStream> =
         run {
