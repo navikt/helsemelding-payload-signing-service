@@ -66,10 +66,11 @@ fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
         Direction.OUT -> processingService.processOutgoing(request)
     }
 
-    val (status, body) = result
-        .map { HttpStatusCode.OK to it }
-        .mapLeft { e -> e.toHttpResponse() }
-        .getOrElse { it }
+    val (status, body) =
+        result
+            .map { HttpStatusCode.OK to it }
+            .mapLeft(ProcessingError::toHttpResponse)
+            .getOrElse { it }
 
     call.respond(status, body)
 }
