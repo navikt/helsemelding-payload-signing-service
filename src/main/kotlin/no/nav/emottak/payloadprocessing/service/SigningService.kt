@@ -36,7 +36,7 @@ sealed interface CertError {
 sealed interface SignXmlError {
     data class Certificate(val error: CertError) : SignXmlError
     data class SigningContext(val error: SigningContextError) : SignXmlError
-    data class SignatureFailed(val cause: Throwable) : SignXmlError
+    data class SignatureFailed(val message: String, val cause: Throwable) : SignXmlError
 }
 
 class SigningService(
@@ -64,7 +64,12 @@ class SigningService(
                 .getCertificate(config().signing.certificateAlias)
                 .encoded
         }
-            .mapLeft(SignXmlError::SignatureFailed)
+            .mapLeft { t ->
+                SignXmlError.SignatureFailed(
+                    message = "Failed to read certificate bytes (alias=${config().signing.certificateAlias})",
+                    cause = t
+                )
+            }
             .flatMap { bytes ->
                 createX509Certificate(bytes)
                     .mapLeft(SignXmlError::Certificate)
@@ -86,7 +91,12 @@ class SigningService(
             signature.sign(signingContext)
             document
         }
-            .mapLeft(SignXmlError::SignatureFailed)
+            .mapLeft { t ->
+                SignXmlError.SignatureFailed(
+                    message = "Failed to sign XML document",
+                    cause = t
+                )
+            }
 
     private fun createX509Certificate(bytes: ByteArray): Either<CertError, X509Certificate> =
         Either
