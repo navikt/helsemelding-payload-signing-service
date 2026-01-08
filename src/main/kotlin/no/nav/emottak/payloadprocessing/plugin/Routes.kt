@@ -68,6 +68,7 @@ fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
 
     val (status, body) =
         result
+            .onLeft { log.error { "POSTing payload failed: $it" } }
             .map { HttpStatusCode.OK to it }
             .mapLeft(ProcessingError::toHttpResponse)
             .getOrElse { it }
@@ -75,10 +76,8 @@ fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
     call.respond(status, body)
 }
 
-private fun ProcessingError.toHttpResponse(): Pair<HttpStatusCode, ErrorResponse> {
-    log.error { "POST /payload failed: $this" }
-
-    return when (this) {
+private fun ProcessingError.toHttpResponse(): Pair<HttpStatusCode, ErrorResponse> =
+    when (this) {
         is ProcessingError.InvalidRequest ->
             HttpStatusCode.BadRequest to ErrorResponse(message)
 
@@ -88,4 +87,3 @@ private fun ProcessingError.toHttpResponse(): Pair<HttpStatusCode, ErrorResponse
         is ProcessingError.SigningFailed ->
             HttpStatusCode.UnprocessableEntity to ErrorResponse("Unable to sign payload")
     }
-}
