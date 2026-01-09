@@ -1,7 +1,7 @@
-package no.nav.emottak.payloadprocessing.service
+package no.nav.helsemelding.payloadprocessing.service
 
-import no.nav.emottak.payloadprocessing.config
-import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
+import no.nav.helsemelding.payloadprocessing.config
+import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream

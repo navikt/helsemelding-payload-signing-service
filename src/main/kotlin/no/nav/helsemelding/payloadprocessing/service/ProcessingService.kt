@@ -1,8 +1,8 @@
-package no.nav.emottak.payloadprocessing.service
+package no.nav.helsemelding.payloadprocessing.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.emottak.payloadprocessing.model.PayloadRequest
-import no.nav.emottak.payloadprocessing.model.PayloadResponse
+import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
+import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

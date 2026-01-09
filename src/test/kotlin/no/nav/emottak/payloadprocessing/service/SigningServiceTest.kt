@@ -1,8 +1,8 @@
-package no.nav.emottak.payloadprocessing.service
+package no.nav.helsemelding.payloadprocessing.service
 
 import io.kotest.core.spec.style.StringSpec
-import no.nav.emottak.payloadprocessing.config
-import no.nav.emottak.payloadprocessing.keystore.KeyStoreManager
+import no.nav.helsemelding.payloadprocessing.config
+import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
 import org.junit.jupiter.api.Assertions
 import org.w3c.dom.Document
 import java.io.InputStream

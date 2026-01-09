@@ -1,7 +1,7 @@
-package no.nav.emottak.payloadprocessing.keystore
+package no.nav.helsemelding.payloadprocessing.keystore
 
 import io.kotest.core.spec.style.StringSpec
-import no.nav.emottak.payloadprocessing.config
+import no.nav.helsemelding.payloadprocessing.config
 import org.junit.jupiter.api.Assertions
 import java.io.ByteArrayInputStream
 import java.security.PrivateKey

@@ -1,6 +1,6 @@
 package no.nav.helsemelding.payloadprocessing.config
 
-import no.nav.emottak.payloadprocessing.keystore.KeyStoreConfig
+import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreConfig
 import kotlin.time.Duration
 
 data class Config(

@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing.keystore
+package no.nav.helsemelding.payloadprocessing.keystore
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.bouncycastle.jce.provider.BouncyCastleProvider

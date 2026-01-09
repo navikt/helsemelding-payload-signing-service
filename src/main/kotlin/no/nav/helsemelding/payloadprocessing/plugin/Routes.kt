@@ -10,9 +10,9 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.emottak.payloadprocessing.model.Direction
-import no.nav.emottak.payloadprocessing.model.PayloadRequest
-import no.nav.emottak.payloadprocessing.service.ProcessingService
+import no.nav.helsemelding.payloadprocessing.model.Direction
+import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
+import no.nav.helsemelding.payloadprocessing.service.ProcessingService
 
 fun Application.configureRoutes(
     processingService: ProcessingService,

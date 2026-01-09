@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing.plugin
+package no.nav.helsemelding.payloadprocessing.plugin
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application

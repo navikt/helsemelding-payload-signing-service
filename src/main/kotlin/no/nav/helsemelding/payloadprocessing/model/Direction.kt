@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing.model
+package no.nav.helsemelding.payloadprocessing.model
 
 import kotlinx.serialization.Serializable
 

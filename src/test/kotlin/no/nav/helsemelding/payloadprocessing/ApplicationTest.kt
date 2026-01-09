@@ -15,9 +15,9 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.testApplication
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.emottak.payloadprocessing.model.Direction
-import no.nav.emottak.payloadprocessing.model.PayloadRequest
-import no.nav.emottak.payloadprocessing.model.PayloadResponse
+import no.nav.helsemelding.payloadprocessing.model.Direction
+import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
+import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
 import org.junit.jupiter.api.Assertions
 import org.w3c.dom.Document
 import java.io.InputStream
