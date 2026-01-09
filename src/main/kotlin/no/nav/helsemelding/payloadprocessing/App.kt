@@ -10,8 +10,12 @@ import io.ktor.server.netty.Netty
 import io.ktor.utils.io.CancellationException
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.awaitCancellation
+import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
 import no.nav.helsemelding.payloadprocessing.plugin.configureMetrics
 import no.nav.helsemelding.payloadprocessing.plugin.configureRoutes
+import no.nav.helsemelding.payloadprocessing.plugin.installContentNegotiation
+import no.nav.helsemelding.payloadprocessing.service.ProcessingService
+import no.nav.helsemelding.payloadprocessing.service.SigningService
 
 private val log = KotlinLogging.logger {}
 
@@ -36,9 +40,14 @@ fun main() = SuspendApp {
 internal fun payloadProcessingModule(
     meterRegistry: PrometheusMeterRegistry
 ): Application.() -> Unit {
+    val keyStoreManager = KeyStoreManager(*config().keyStore.toTypedArray())
+    val signingService = SigningService(keyStoreManager)
+    val processingService = ProcessingService(signingService)
+
     return {
+        installContentNegotiation()
         configureMetrics(meterRegistry)
-        configureRoutes(meterRegistry)
+        configureRoutes(processingService, meterRegistry)
     }
 }
 

@@ -60,4 +60,13 @@ spec:
       rules:
         - application: state-service
           cluster: dev-gcp
+  envFrom:
+    - secret: helsemelding-keystore-pwd
+  filesFrom:
+    - secret: helsemelding-keystore
+      mountPath: /var/run/secrets/helsemelding-keystore
   env:
+    - name: KEYSTORE_FILE_SIGN
+      value: /var/run/secrets/helsemelding-keystore/nav_signing_test.p12
+    - name: NAV_CERTIFICATE_ALIAS
+      value: nav_virksomhet

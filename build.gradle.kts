@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.server.netty)
     implementation(libs.kotlin.logging)
+    implementation(libs.bundles.bouncycastle)
 
     testImplementation(testLibs.bundles.kotest)
     testImplementation(testLibs.ktor.server.test.host)
