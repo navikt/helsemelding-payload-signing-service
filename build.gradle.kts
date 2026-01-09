@@ -60,5 +60,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("no.nav.emottak.payloadprocessing.AppKt")
+    mainClass.set("no.nav.helsemelding.payloadprocessing.AppKt")
 }

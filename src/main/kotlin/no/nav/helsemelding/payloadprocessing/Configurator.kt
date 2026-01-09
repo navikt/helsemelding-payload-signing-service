@@ -1,10 +1,10 @@
-package no.nav.emottak.payloadprocessing
+package no.nav.helsemelding.payloadprocessing
 
 import arrow.core.memoize
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.ExperimentalHoplite
 import com.sksamuel.hoplite.addResourceSource
-import no.nav.emottak.payloadprocessing.config.Config
+import no.nav.helsemelding.payloadprocessing.config.Config
 
 @OptIn(ExperimentalHoplite::class)
 val config: () -> Config = {

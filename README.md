@@ -1,4 +1,4 @@
-# payload-processing-service
+# helsemelding-payload-signing-service
 
 The service exposes the `POST /paylod` endpoint.  
 A client service sends an outgoing message to the endpoint as a `byteArray` in `PayloadRequest`, and receives the signed message back in `PayloadResponse`.

@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing.plugin
+package no.nav.helsemelding.payloadprocessing.plugin
 
 import io.ktor.server.application.Application
 import io.ktor.server.request.receive
