@@ -61,12 +61,12 @@ spec:
         - application: state-service
           cluster: dev-gcp
   envFrom:
-    - secret: dialog-keystore-pwd
+    - secret: helsemelding-keystore-pwd
   filesFrom:
-    - secret: dialog-keystore
-      mountPath: /var/run/secrets/dialog-keystore
+    - secret: helsemelding-keystore
+      mountPath: /var/run/secrets/helsemelding-keystore
   env:
     - name: KEYSTORE_FILE_SIGN
-      value: /var/run/secrets/dialog-keystore/nav_signing_test.p12
+      value: /var/run/secrets/helsemelding-keystore/nav_signing_test.p12
     - name: NAV_CERTIFICATE_ALIAS
       value: nav_virksomhet
