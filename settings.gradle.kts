@@ -98,4 +98,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "payload-processing-service"
+rootProject.name = "helsemelding-payload-signing-service"

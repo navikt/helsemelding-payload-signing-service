@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing.config
+package no.nav.helsemelding.payloadprocessing.config
 
 import kotlin.time.Duration
 

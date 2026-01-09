@@ -1,4 +1,4 @@
-package no.nav.emottak.payloadprocessing
+package no.nav.helsemelding.payloadprocessing
 
 import arrow.fx.coroutines.ExitCase
 import arrow.fx.coroutines.ResourceScope
