@@ -1,9 +1,11 @@
 package no.nav.helsemelding.payloadprocessing.service
 
+import arrow.core.getOrElse
+import io.kotest.assertions.fail
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import no.nav.helsemelding.payloadprocessing.config
 import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
-import org.junit.jupiter.api.Assertions
 import org.w3c.dom.Document
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory
@@ -14,13 +16,18 @@ class SigningServiceTest : StringSpec({
         val keyStoreManager = KeyStoreManager(*config().keyStore.toTypedArray())
         val signingService = SigningService(keyStoreManager)
 
-        val unsignedXMLInputStream = this::class.java.classLoader.getResourceAsStream("test.xml")
-        val unsignedDocument = createDocument(unsignedXMLInputStream!!)
-        Assertions.assertEquals(0, unsignedDocument.getElementsByTagName("Signature").length)
+        val unsignedXmlStream =
+            this::class.java.classLoader.getResourceAsStream("test.xml")
+                ?: error("Missing test resource: test.xml")
 
-        val signedDocument = signingService.signXml(unsignedDocument)
+        val unsignedDocument = createDocument(unsignedXmlStream)
+        unsignedDocument.getElementsByTagName("Signature").length shouldBe 0
 
-        Assertions.assertEquals(1, signedDocument.getElementsByTagName("Signature").length)
+        val signedDocument = signingService
+            .signXml(unsignedDocument)
+            .getOrElse { e -> fail("signXml returned Left: $e") }
+
+        signedDocument.getElementsByTagName("Signature").length shouldBe 1
     }
 }) {
     companion object {

@@ -1,5 +1,8 @@
 package no.nav.helsemelding.payloadprocessing.service
 
+import arrow.core.Either
+import arrow.core.raise.either
+import arrow.core.right
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
 import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
@@ -13,36 +16,46 @@ import javax.xml.transform.stream.StreamResult
 
 private val log = KotlinLogging.logger {}
 
+sealed interface ProcessingError {
+    data class InvalidRequest(val message: String) : ProcessingError
+    data class XmlParseFailed(val cause: Throwable) : ProcessingError
+    data class SigningFailed(val error: SignXmlError) : ProcessingError
+}
+
 class ProcessingService(
     val signingService: SigningService
 ) {
+    fun processIncoming(request: PayloadRequest): Either<ProcessingError, PayloadResponse> =
+        PayloadResponse(request.bytes)
+            .right()
+            .also { log.info { "Processing incoming payload..." } }
 
-    fun processIncoming(request: PayloadRequest): PayloadResponse {
-        log.info { "Processing incoming payload..." }
-        return PayloadResponse(request.bytes)
-    }
+    fun processOutgoing(request: PayloadRequest): Either<ProcessingError, PayloadResponse> =
+        either {
+            val xmlDocument =
+                Either.catch { request.bytes.toXmlDocument() }
+                    .mapLeft(ProcessingError::XmlParseFailed)
+                    .bind()
 
-    fun processOutgoing(request: PayloadRequest): PayloadResponse {
-        val xmlDocument = request.bytes.toXmlDocument()
-        val signedDocument: Document = signingService.signXml(xmlDocument)
+            val signedDocument =
+                signingService.signXml(xmlDocument)
+                    .mapLeft(ProcessingError::SigningFailed)
+                    .bind()
 
-        return PayloadResponse(signedDocument.toByteArray())
-    }
-}
+            PayloadResponse(signedDocument.toByteArray())
+        }
 
-fun ByteArray.toXmlDocument(): Document {
-    val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-    documentBuilderFactory.isNamespaceAware = true
+    private fun ByteArray.toXmlDocument(): Document =
+        DocumentBuilderFactory.newInstance()
+            .apply { isNamespaceAware = true }
+            .newDocumentBuilder()
+            .parse(ByteArrayInputStream(this))
 
-    val inputStream = ByteArrayInputStream(this)
-
-    return documentBuilderFactory.newDocumentBuilder().parse(inputStream)
-}
-
-fun Document.toByteArray(): ByteArray {
-    val outputStream = ByteArrayOutputStream()
-    val xmlSource = DOMSource(this)
-    val result = StreamResult(outputStream)
-    TransformerFactory.newInstance().newTransformer().transform(xmlSource, result)
-    return outputStream.toByteArray()
+    private fun Document.toByteArray(): ByteArray =
+        ByteArrayOutputStream().use { output ->
+            TransformerFactory.newInstance()
+                .newTransformer()
+                .transform(DOMSource(this), StreamResult(output))
+            output.toByteArray()
+        }
 }

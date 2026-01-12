@@ -1,11 +1,15 @@
 package no.nav.helsemelding.payloadprocessing.service
 
+import arrow.core.Either
+import arrow.core.flatMap
+import arrow.core.raise.either
+import arrow.core.raise.ensureNotNull
 import no.nav.helsemelding.payloadprocessing.config
 import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
-import java.security.cert.CertificateException
+import java.math.BigInteger
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.xml.crypto.dsig.Reference
@@ -16,6 +20,24 @@ import javax.xml.crypto.dsig.XMLSignatureFactory
 import javax.xml.crypto.dsig.dom.DOMSignContext
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec
 import javax.xml.crypto.dsig.spec.TransformParameterSpec
+
+sealed interface SigningContextError {
+    data class KeyNotFound(
+        val subject: String,
+        val serialNumber: BigInteger
+    ) : SigningContextError
+}
+
+sealed interface CertError {
+    data class ParseFailed(val cause: Throwable) : CertError
+    data class NotX509(val actualType: String?) : CertError
+}
+
+sealed interface SignXmlError {
+    data class Certificate(val error: CertError) : SignXmlError
+    data class SigningContext(val error: SigningContextError) : SignXmlError
+    data class SignatureFailed(val message: String, val cause: Throwable) : SignXmlError
+}
 
 class SigningService(
     val keyStoreManager: KeyStoreManager
@@ -28,38 +50,81 @@ class SigningService(
     private val factory = XMLSignatureFactory.getInstance("DOM")
     private val provider = BouncyCastleProvider()
 
-    fun signXml(document: Document): Document {
-        val certificateBytes = keyStoreManager.getCertificate(config().signing.certificateAlias).encoded
-        val certificate: X509Certificate = createX509Certificate(certificateBytes)
+    fun signXml(document: Document): Either<SignXmlError, Document> =
+        either {
+            val certificate = loadSigningCertificate().bind()
+            val signingContext = createSigningContext(certificate, document).bind()
+            val signature = buildXmlSignature(certificate)
 
-        val signingContext = buildSigningContext(certificate, document)
-        val signature = buildXmlSignature(certificate)
-
-        signature.sign(signingContext)
-        return document
-    }
-
-    private fun createX509Certificate(byteArray: ByteArray): X509Certificate {
-        val certificateFactory = CertificateFactory.getInstance("X.509", provider)
-        return try {
-            certificateFactory.generateCertificate(ByteArrayInputStream(byteArray)) as X509Certificate
-        } catch (e: CertificateException) {
-            throw RuntimeException("Can not create X509Certificate from ByteArray", e)
+            sign(signature, signingContext, document).bind()
         }
-    }
+
+    private fun loadSigningCertificate(): Either<SignXmlError, X509Certificate> =
+        Either.catch {
+            keyStoreManager
+                .getCertificate(config().signing.certificateAlias)
+                .encoded
+        }
+            .mapLeft { t ->
+                SignXmlError.SignatureFailed(
+                    message = "Failed to read certificate bytes (alias=${config().signing.certificateAlias})",
+                    cause = t
+                )
+            }
+            .flatMap { bytes ->
+                createX509Certificate(bytes)
+                    .mapLeft(SignXmlError::Certificate)
+            }
+
+    private fun createSigningContext(
+        certificate: X509Certificate,
+        document: Document
+    ): Either<SignXmlError, DOMSignContext> =
+        buildSigningContext(certificate, document)
+            .mapLeft(SignXmlError::SigningContext)
+
+    private fun sign(
+        signature: XMLSignature,
+        signingContext: DOMSignContext,
+        document: Document
+    ): Either<SignXmlError, Document> =
+        Either.catch {
+            signature.sign(signingContext)
+            document
+        }
+            .mapLeft { t ->
+                SignXmlError.SignatureFailed(
+                    message = "Failed to sign XML document",
+                    cause = t
+                )
+            }
+
+    private fun createX509Certificate(bytes: ByteArray): Either<CertError, X509Certificate> =
+        Either
+            .catch {
+                val cf = CertificateFactory.getInstance("X.509", provider)
+                cf.generateCertificate(ByteArrayInputStream(bytes))
+            }
+            .mapLeft { CertError.ParseFailed(it) }
+            .flatMap { cert ->
+                (cert as? X509Certificate)
+                    ?.let { Either.Right(it) }
+                    ?: Either.Left(CertError.NotX509(cert::class.qualifiedName))
+            }
 
     private fun buildSigningContext(
         signerCertificate: X509Certificate,
         document: Document
-    ): DOMSignContext {
-        val signerKey = keyStoreManager.getPrivateKey(signerCertificate.serialNumber)
-            ?: throw SignatureException(
-                "Fant ikke key for sertifikat med subject ${signerCertificate.subjectX500Principal.name} " +
-                    "og serienummer ${signerCertificate.serialNumber} i keystore"
-            )
-        val signingContext = DOMSignContext(signerKey, document.documentElement)
-        return signingContext
-    }
+    ): Either<SigningContextError, DOMSignContext> =
+        either {
+            val privateKey = ensureNotNull(keyStoreManager.getPrivateKey(signerCertificate.serialNumber)) {
+                SigningContextError.KeyNotFound(
+                    subject = signerCertificate.subjectX500Principal.name,
+                    serialNumber = signerCertificate.serialNumber
+                )
+            }
+            DOMSignContext(privateKey, document.documentElement)
+        }
 
     private fun buildXmlSignature(signerCertificate: X509Certificate): XMLSignature {
         val keyInfoFactory = factory.keyInfoFactory
@@ -92,5 +157,3 @@ class SigningService(
         )
     }
 }
-
-class SignatureException(override val message: String, e: Exception? = null) : Exception(message, e)

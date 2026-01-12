@@ -1,5 +1,9 @@
 package no.nav.helsemelding.payloadprocessing.plugin
 
+import arrow.core.Either
+import arrow.core.getOrElse
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -12,7 +16,13 @@ import io.ktor.server.routing.routing
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helsemelding.payloadprocessing.model.Direction
 import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
+import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
+import no.nav.helsemelding.payloadprocessing.service.ProcessingError
 import no.nav.helsemelding.payloadprocessing.service.ProcessingService
+
+private val log = KotlinLogging.logger {}
+
+data class ErrorResponse(val error: String)
 
 fun Application.configureRoutes(
     processingService: ProcessingService,
@@ -44,19 +54,36 @@ fun Route.internalRoutes(
 
 fun Route.externalRoutes() {
     get("/") {
-        call.respondText("Payload Processing Service os online")
+        call.respondText("Payload Processing Service is online")
     }
 }
 
-fun Route.postPayload(
-    processingService: ProcessingService
-) = post("/payload") {
-    val request: PayloadRequest = call.receive(PayloadRequest::class)
+fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
+    val request = call.receive<PayloadRequest>()
 
-    val response = when (request.direction) {
+    val result: Either<ProcessingError, PayloadResponse> = when (request.direction) {
         Direction.IN -> processingService.processIncoming(request)
         Direction.OUT -> processingService.processOutgoing(request)
     }
 
-    call.respond(response)
+    val (status, body) =
+        result
+            .onLeft { log.error { "POSTing payload failed: $it" } }
+            .map { HttpStatusCode.OK to it }
+            .mapLeft(ProcessingError::toHttpResponse)
+            .getOrElse { it }
+
+    call.respond(status, body)
 }
+
+private fun ProcessingError.toHttpResponse(): Pair<HttpStatusCode, ErrorResponse> =
+    when (this) {
+        is ProcessingError.InvalidRequest ->
+            HttpStatusCode.BadRequest to ErrorResponse(message)
+
+        is ProcessingError.XmlParseFailed ->
+            HttpStatusCode.BadRequest to ErrorResponse("Invalid XML payload")
+
+        is ProcessingError.SigningFailed ->
+            HttpStatusCode.UnprocessableEntity to ErrorResponse("Unable to sign payload")
+    }
