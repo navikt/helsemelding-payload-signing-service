@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing.model
+package no.nav.helsemelding.payloadsigning.model
 
 import kotlinx.serialization.Serializable
 

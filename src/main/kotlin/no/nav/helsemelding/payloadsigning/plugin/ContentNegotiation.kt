@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing.plugin
+package no.nav.helsemelding.payloadsigning.plugin
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application

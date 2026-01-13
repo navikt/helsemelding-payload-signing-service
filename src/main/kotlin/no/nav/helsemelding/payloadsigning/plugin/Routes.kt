@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing.plugin
+package no.nav.helsemelding.payloadsigning.plugin
 
 import arrow.core.Either
 import arrow.core.getOrElse
@@ -14,11 +14,11 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.helsemelding.payloadprocessing.model.Direction
-import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
-import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
-import no.nav.helsemelding.payloadprocessing.service.ProcessingError
-import no.nav.helsemelding.payloadprocessing.service.ProcessingService
+import no.nav.helsemelding.payloadsigning.model.Direction
+import no.nav.helsemelding.payloadsigning.model.PayloadRequest
+import no.nav.helsemelding.payloadsigning.model.PayloadResponse
+import no.nav.helsemelding.payloadsigning.service.ProcessingError
+import no.nav.helsemelding.payloadsigning.service.ProcessingService
 
 private val log = KotlinLogging.logger {}
 
