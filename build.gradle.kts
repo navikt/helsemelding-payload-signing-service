@@ -60,5 +60,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("no.nav.helsemelding.payloadprocessing.AppKt")
+    mainClass.set("no.nav.helsemelding.payloadsigning.AppKt")
 }
