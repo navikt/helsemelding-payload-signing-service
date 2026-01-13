@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing
+package no.nav.helsemelding.payloadsigning
 
 import arrow.continuations.SuspendApp
 import arrow.continuations.ktor.server
@@ -10,12 +10,12 @@ import io.ktor.server.netty.Netty
 import io.ktor.utils.io.CancellationException
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.awaitCancellation
-import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
-import no.nav.helsemelding.payloadprocessing.plugin.configureMetrics
-import no.nav.helsemelding.payloadprocessing.plugin.configureRoutes
-import no.nav.helsemelding.payloadprocessing.plugin.installContentNegotiation
-import no.nav.helsemelding.payloadprocessing.service.ProcessingService
-import no.nav.helsemelding.payloadprocessing.service.SigningService
+import no.nav.helsemelding.payloadsigning.keystore.KeyStoreManager
+import no.nav.helsemelding.payloadsigning.plugin.configureMetrics
+import no.nav.helsemelding.payloadsigning.plugin.configureRoutes
+import no.nav.helsemelding.payloadsigning.plugin.installContentNegotiation
+import no.nav.helsemelding.payloadsigning.service.ProcessingService
+import no.nav.helsemelding.payloadsigning.service.SigningService
 
 private val log = KotlinLogging.logger {}
 

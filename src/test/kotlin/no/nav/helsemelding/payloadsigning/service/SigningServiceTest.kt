@@ -1,11 +1,11 @@
-package no.nav.helsemelding.payloadprocessing.service
+package no.nav.helsemelding.payloadsigning.service
 
 import arrow.core.getOrElse
 import io.kotest.assertions.fail
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import no.nav.helsemelding.payloadprocessing.config
-import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
+import no.nav.helsemelding.payloadsigning.config
+import no.nav.helsemelding.payloadsigning.keystore.KeyStoreManager
 import org.w3c.dom.Document
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory

@@ -1,11 +1,11 @@
-package no.nav.helsemelding.payloadprocessing.service
+package no.nav.helsemelding.payloadsigning.service
 
 import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.raise.either
 import arrow.core.raise.ensureNotNull
-import no.nav.helsemelding.payloadprocessing.config
-import no.nav.helsemelding.payloadprocessing.keystore.KeyStoreManager
+import no.nav.helsemelding.payloadsigning.config
+import no.nav.helsemelding.payloadsigning.keystore.KeyStoreManager
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream

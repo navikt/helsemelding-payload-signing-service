@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing
+package no.nav.helsemelding.payloadsigning
 
 import arrow.fx.coroutines.ExitCase
 import arrow.fx.coroutines.ResourceScope

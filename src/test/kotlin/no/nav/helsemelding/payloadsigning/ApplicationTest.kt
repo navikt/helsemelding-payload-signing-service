@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing
+package no.nav.helsemelding.payloadsigning
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -15,9 +15,9 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.testApplication
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.helsemelding.payloadprocessing.model.Direction
-import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
-import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
+import no.nav.helsemelding.payloadsigning.model.Direction
+import no.nav.helsemelding.payloadsigning.model.PayloadRequest
+import no.nav.helsemelding.payloadsigning.model.PayloadResponse
 import org.junit.jupiter.api.Assertions
 import org.w3c.dom.Document
 import java.io.InputStream

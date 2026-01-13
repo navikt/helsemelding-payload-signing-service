@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadprocessing.keystore
+package no.nav.helsemelding.payloadsigning.keystore
 
 import arrow.core.Either
 import arrow.core.flatMap

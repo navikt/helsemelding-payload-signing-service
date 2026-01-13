@@ -1,11 +1,11 @@
-package no.nav.helsemelding.payloadprocessing.service
+package no.nav.helsemelding.payloadsigning.service
 
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.right
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.helsemelding.payloadprocessing.model.PayloadRequest
-import no.nav.helsemelding.payloadprocessing.model.PayloadResponse
+import no.nav.helsemelding.payloadsigning.model.PayloadRequest
+import no.nav.helsemelding.payloadsigning.model.PayloadResponse
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
