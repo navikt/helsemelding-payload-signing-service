@@ -7,7 +7,7 @@ on:
 
 env:
   MODULE_NAME: "helsemelding-payload-signing-service"
-  NAIS_MANIFEST: "helsemelding-payload-signing-service-dev.yaml"
+  NAIS_MANIFEST: "payload-signing-service-dev.yaml"
 
 jobs:
   build-and-push:
