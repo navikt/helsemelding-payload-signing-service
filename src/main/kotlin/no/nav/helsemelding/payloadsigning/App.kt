@@ -11,6 +11,7 @@ import io.ktor.utils.io.CancellationException
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.awaitCancellation
 import no.nav.helsemelding.payloadsigning.keystore.KeyStoreManager
+import no.nav.helsemelding.payloadsigning.plugin.configureAuthentication
 import no.nav.helsemelding.payloadsigning.plugin.configureMetrics
 import no.nav.helsemelding.payloadsigning.plugin.configureRoutes
 import no.nav.helsemelding.payloadsigning.plugin.installContentNegotiation
@@ -46,6 +47,7 @@ internal fun payloadProcessingModule(
 
     return {
         installContentNegotiation()
+        configureAuthentication()
         configureMetrics(meterRegistry)
         configureRoutes(processingService, meterRegistry)
     }
