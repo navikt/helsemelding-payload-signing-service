@@ -57,6 +57,8 @@ dependencies {
 
     testImplementation(testLibs.bundles.kotest)
     testImplementation(testLibs.ktor.server.test.host)
+    testImplementation(testLibs.mock.oauth2.server)
+    testImplementation("io.mockk:mockk:1.13.7")
     testImplementation(kotlin("test"))
 }
 

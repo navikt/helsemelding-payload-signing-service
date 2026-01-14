@@ -32,7 +32,10 @@ fun Application.configureRoutes(
 ) {
     routing {
         internalRoutes(registry)
-        externalRoutes(processingService)
+
+        authenticate(config().azureAuth.issuer.value) {
+            externalRoutes(processingService)
+        }
     }
 }
 
@@ -57,9 +60,7 @@ fun Route.externalRoutes(processingService: ProcessingService) {
         call.respondText("Payload Processing Service is online")
     }
 
-    authenticate(config().azureAuth.issuer.value) {
-        postPayload(processingService)
-    }
+    postPayload(processingService)
 }
 
 fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
