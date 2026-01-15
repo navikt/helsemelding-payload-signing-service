@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -23,7 +24,7 @@ class PayloadSigningServiceClient(
 
     suspend fun signPayload(payloadRequest: PayloadRequest): PayloadResponse {
         val url = "$ediAdapterUrl/payload"
-        val response = httpClient.get(url) {
+        val response = httpClient.post(url) {
             contentType(ContentType.Application.Json)
             setBody(payloadRequest)
         }.withLogging()
