@@ -39,7 +39,7 @@ class PayloadSigningServiceClientSpec : StringSpec(
             )
             val payloadResponse = PayloadResponse(bytes = payloadBytes)
 
-            val ediClient = payloadSigningServiceClient {
+            val client = payloadSigningServiceClient {
                 fakeScopedAuthHttpClient { request ->
                     request.method shouldBe HttpMethod.Post
                     request.url.fullPath shouldBeEqual "/payload"
@@ -52,7 +52,7 @@ class PayloadSigningServiceClientSpec : StringSpec(
                 }
             }
 
-            val response = ediClient.signPayload(payloadRequest)
+            val response = client.signPayload(payloadRequest)
 
             response.shouldNotBeNull()
             response.bytes shouldBe payloadResponse.bytes
@@ -61,7 +61,7 @@ class PayloadSigningServiceClientSpec : StringSpec(
 )
 
 private fun payloadSigningServiceClient(httpClient: () -> HttpClient) = PayloadSigningServiceClient(
-    ediAdapterUrl = "http://localhost",
+    payloadSigningServiceUrl = "http://localhost",
     clientProvider = httpClient
 )
 

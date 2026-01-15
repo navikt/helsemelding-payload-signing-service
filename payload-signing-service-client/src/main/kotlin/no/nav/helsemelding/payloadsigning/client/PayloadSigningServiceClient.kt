@@ -18,12 +18,12 @@ private val log = KotlinLogging.logger {}
 
 class PayloadSigningServiceClient(
     clientProvider: () -> HttpClient,
-    private val ediAdapterUrl: String = config().payloadSigningService.url.toString()
+    private val payloadSigningServiceUrl: String = config().payloadSigningService.url.toString()
 ) {
     private var httpClient = clientProvider.invoke()
 
     suspend fun signPayload(payloadRequest: PayloadRequest): PayloadResponse {
-        val url = "$ediAdapterUrl/payload"
+        val url = "$payloadSigningServiceUrl/payload"
         val response = httpClient.post(url) {
             contentType(ContentType.Application.Json)
             setBody(payloadRequest)

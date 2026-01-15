@@ -10,22 +10,22 @@ internal data class Config(
     val payloadSigningService: PayloadSigningService
 ) {
     data class AzureAuth(
-        val azureGrantType: AzureGrantType,
-        val azureTokenEndpoint: AzureTokenEndpoint,
-        val azureAppClientId: AzureApplicationId,
-        val azureAppClientSecret: AzureApplicationSecret
+        val grantType: GrantType,
+        val tokenEndpoint: TokenEndpoint,
+        val appClientId: ApplicationId,
+        val appClientSecret: ApplicationSecret
     ) {
         @JvmInline
-        value class AzureGrantType(val value: String)
+        value class GrantType(val value: String)
 
         @JvmInline
-        value class AzureTokenEndpoint(val value: String)
+        value class TokenEndpoint(val value: String)
 
         @JvmInline
-        value class AzureApplicationId(val value: String)
+        value class ApplicationId(val value: String)
 
         @JvmInline
-        value class AzureApplicationSecret(val value: String)
+        value class ApplicationSecret(val value: String)
     }
 
     data class HttpClient(

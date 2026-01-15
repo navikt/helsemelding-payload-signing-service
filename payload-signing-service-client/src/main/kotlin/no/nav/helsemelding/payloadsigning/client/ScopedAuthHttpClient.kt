@@ -57,11 +57,11 @@ private suspend fun submitTokenForm(
     scope: String
 ): HttpResponse =
     tokenClient.submitForm(
-        url = azureAuth.azureTokenEndpoint.value,
+        url = azureAuth.tokenEndpoint.value,
         formParameters = parameters {
-            append("client_id", azureAuth.azureAppClientId.value)
-            append("client_secret", azureAuth.azureAppClientSecret.value)
-            append("grant_type", azureAuth.azureGrantType.value)
+            append("client_id", azureAuth.appClientId.value)
+            append("client_secret", azureAuth.appClientSecret.value)
+            append("grant_type", azureAuth.grantType.value)
             append("scope", scope)
         }
     )
