@@ -55,7 +55,41 @@ class PayloadSigningServiceClientSpec : StringSpec(
             val response = client.signPayload(payloadRequest)
 
             response.shouldNotBeNull()
-            response.bytes shouldBe payloadResponse.bytes
+            response.first?.bytes shouldBe payloadResponse.bytes
+        }
+
+        "signPayload returns MessageSigningError when payload signing fails" {
+            val payloadRequest = PayloadRequest(
+                bytes = payloadBytes,
+                direction = Direction.OUT
+            )
+
+            val errorCases = listOf(
+                HttpStatusCode.BadRequest to "Bad Request",
+                HttpStatusCode.Unauthorized to "Unauthorized",
+                HttpStatusCode.NotFound to "Not Found",
+                HttpStatusCode.InternalServerError to "Internal Server Error"
+            )
+
+            errorCases.forEach { (status, message) ->
+                val client = payloadSigningServiceClient {
+                    fakeScopedAuthHttpClient { request ->
+                        request.method shouldBe HttpMethod.Post
+                        request.url.fullPath shouldBeEqual "/payload"
+
+                        respond(
+                            content = message,
+                            status = status
+                        )
+                    }
+                }
+
+                val response = client.signPayload(payloadRequest)
+
+                response.shouldNotBeNull()
+                response.second?.code shouldBe status.value
+                response.second?.message shouldBe message
+            }
         }
     }
 )

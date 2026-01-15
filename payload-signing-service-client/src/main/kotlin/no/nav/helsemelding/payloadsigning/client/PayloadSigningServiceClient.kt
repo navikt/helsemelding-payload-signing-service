@@ -10,7 +10,9 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import no.nav.helsemelding.payloadsigning.client.model.MessageSigningError
 import no.nav.helsemelding.payloadsigning.model.PayloadRequest
 import no.nav.helsemelding.payloadsigning.model.PayloadResponse
 
@@ -22,14 +24,23 @@ class PayloadSigningServiceClient(
 ) {
     private var httpClient = clientProvider.invoke()
 
-    suspend fun signPayload(payloadRequest: PayloadRequest): PayloadResponse {
+    suspend fun signPayload(payloadRequest: PayloadRequest): Pair<PayloadResponse?, MessageSigningError?> {
         val url = "$payloadSigningServiceUrl/payload"
+
         val response = httpClient.post(url) {
             contentType(ContentType.Application.Json)
             setBody(payloadRequest)
         }.withLogging()
 
-        return response.body()
+        if (response.status != HttpStatusCode.OK) {
+            val messageSigningError = MessageSigningError(
+                code = response.status.value,
+                message = response.bodyAsText()
+            )
+            return Pair(null, messageSigningError)
+        }
+
+        return Pair(response.body(), null)
     }
 
     fun close() = httpClient.close()
