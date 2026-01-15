@@ -15,7 +15,7 @@ dependencyResolutionManagement {
             version("jwt", "4.4.0")
             version("nimbus-jwt", "9.31")
             version("suspendapp", "0.5.0")
-            version("ktor", "3.0.3")
+            version("ktor", "3.3.1")
             version("kotlin-logging", "7.0.3")
             version("token-validation-ktor", "5.0.15")
             version("eclipse-angus", "2.0.2")
@@ -50,14 +50,22 @@ dependencyResolutionManagement {
             library("ktor-client-logging", "io.ktor", "ktor-client-logging").versionRef("ktor")
 
             library("ktor-server-metrics-micrometer", "io.ktor", "ktor-server-metrics-micrometer").versionRef("ktor")
-            library("micrometer-registry-prometheus", "io.micrometer", "micrometer-registry-prometheus").versionRef("prometheus")
+            library(
+                "micrometer-registry-prometheus",
+                "io.micrometer",
+                "micrometer-registry-prometheus"
+            ).versionRef("prometheus")
 
             library("kotlin-logging", "io.github.oshai", "kotlin-logging-jvm").versionRef("kotlin-logging")
             library("logback-classic", "ch.qos.logback", "logback-classic").versionRef("logback")
             library("logback-logstash", "net.logstash.logback", "logstash-logback-encoder").versionRef("logstash")
 
             library("ktor-server-auth-jvm", "io.ktor", "ktor-server-auth-jvm").versionRef("ktor")
-            library("token-validation-ktor-v3", "no.nav.security", "token-validation-ktor-v3").versionRef("token-validation-ktor")
+            library(
+                "token-validation-ktor-v3",
+                "no.nav.security",
+                "token-validation-ktor-v3"
+            ).versionRef("token-validation-ktor")
 
             library("bcpkix-jdk18on", "org.bouncycastle", "bcpkix-jdk18on").versionRef("bouncycastle")
             library("bcprov-jdk18on", "org.bouncycastle", "bcprov-jdk18on").versionRef("bouncycastle")
@@ -85,7 +93,11 @@ dependencyResolutionManagement {
             library("kotest-framework-datatest", "io.kotest", "kotest-framework-datatest").versionRef("kotest")
             library("kotest-extensions-jvm", "io.kotest", "kotest-extensions-jvm").versionRef("kotest")
 
-            library("kotest-extensions-testcontainers", "io.kotest.extensions", "kotest-extensions-testcontainers").versionRef("kotest-extensions")
+            library(
+                "kotest-extensions-testcontainers",
+                "io.kotest.extensions",
+                "kotest-extensions-testcontainers"
+            ).versionRef("kotest-extensions")
 
             library("kotest-assertions-arrow", "io.kotest.extensions", "kotest-assertions-arrow").versionRef("arrow")
 
@@ -104,3 +116,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "helsemelding-payload-signing-service"
+
+include("payload-signing-service-client")
