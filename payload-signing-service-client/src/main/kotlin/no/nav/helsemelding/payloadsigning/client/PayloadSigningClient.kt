@@ -4,7 +4,6 @@ import arrow.core.Either
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -19,13 +18,19 @@ import no.nav.helsemelding.payloadsigning.model.PayloadResponse
 
 private val log = KotlinLogging.logger {}
 
-class PayloadSigningServiceClient(
+interface PayloadSigningClient {
+    suspend fun signPayload(payloadRequest: PayloadRequest): Either<MessageSigningError, PayloadResponse>
+
+    fun close()
+}
+
+class HttpPayloadSigningClient(
     clientProvider: () -> HttpClient,
     private val payloadSigningServiceUrl: String = config().payloadSigningService.url.toString()
-) {
+) : PayloadSigningClient {
     private var httpClient = clientProvider.invoke()
 
-    suspend fun signPayload(payloadRequest: PayloadRequest): Either<MessageSigningError, PayloadResponse> {
+    override suspend fun signPayload(payloadRequest: PayloadRequest): Either<MessageSigningError, PayloadResponse> {
         val url = "$payloadSigningServiceUrl/payload"
 
         val response = httpClient.post(url) {
@@ -44,7 +49,7 @@ class PayloadSigningServiceClient(
         return Either.Right(response.body())
     }
 
-    fun close() = httpClient.close()
+    override fun close() = httpClient.close()
 }
 
 suspend fun HttpResponse.withLogging(): HttpResponse {

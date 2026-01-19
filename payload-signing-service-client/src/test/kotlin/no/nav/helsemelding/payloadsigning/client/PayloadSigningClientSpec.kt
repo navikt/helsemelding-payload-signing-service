@@ -26,7 +26,7 @@ import kotlin.time.ExperimentalTime
 import kotlinx.serialization.json.Json as JsonUtil
 
 @OptIn(ExperimentalTime::class)
-class PayloadSigningServiceClientSpec : StringSpec(
+class PayloadSigningClientSpec : StringSpec(
     {
         val payloadBytes = "<MsgHead><Body>hello world</Body></MsgHead>".toByteArray()
 
@@ -54,7 +54,7 @@ class PayloadSigningServiceClientSpec : StringSpec(
 
             response.shouldNotBeNull()
             response.isRight() shouldBe true
-            response.getOrNull()?.bytes shouldBe payloadResponse.bytes
+            response.getOrNull()!!.bytes shouldBe payloadResponse.bytes
         }
 
         "signPayload returns MessageSigningError when payload signing fails" {
@@ -89,14 +89,14 @@ class PayloadSigningServiceClientSpec : StringSpec(
                 response.isLeft() shouldBe true
 
                 val error = response.leftOrNull()
-                error?.code shouldBe status.value
-                error?.message shouldBe message
+                error!!.code shouldBe status.value
+                error.message shouldBe message
             }
         }
     }
 )
 
-private fun payloadSigningServiceClient(httpClient: () -> HttpClient) = PayloadSigningServiceClient(
+private fun payloadSigningServiceClient(httpClient: () -> HttpClient) = HttpPayloadSigningClient(
     payloadSigningServiceUrl = "http://localhost",
     clientProvider = httpClient
 )
