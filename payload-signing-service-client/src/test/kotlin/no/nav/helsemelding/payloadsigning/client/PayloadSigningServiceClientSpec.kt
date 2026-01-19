@@ -16,7 +16,6 @@ import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.fullPath
-import io.ktor.http.headers
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import no.nav.helsemelding.payloadsigning.model.Direction
@@ -29,7 +28,6 @@ import kotlinx.serialization.json.Json as JsonUtil
 @OptIn(ExperimentalTime::class)
 class PayloadSigningServiceClientSpec : StringSpec(
     {
-
         val payloadBytes = "<MsgHead><Body>hello world</Body></MsgHead>".toByteArray()
 
         "signPayload returns PayloadResponse when payload is successfully signed" {
@@ -55,7 +53,8 @@ class PayloadSigningServiceClientSpec : StringSpec(
             val response = client.signPayload(payloadRequest)
 
             response.shouldNotBeNull()
-            response.first?.bytes shouldBe payloadResponse.bytes
+            response.isRight() shouldBe true
+            response.getOrNull()?.bytes shouldBe payloadResponse.bytes
         }
 
         "signPayload returns MessageSigningError when payload signing fails" {
@@ -87,8 +86,11 @@ class PayloadSigningServiceClientSpec : StringSpec(
                 val response = client.signPayload(payloadRequest)
 
                 response.shouldNotBeNull()
-                response.second?.code shouldBe status.value
-                response.second?.message shouldBe message
+                response.isLeft() shouldBe true
+
+                val error = response.leftOrNull()
+                error?.code shouldBe status.value
+                error?.message shouldBe message
             }
         }
     }

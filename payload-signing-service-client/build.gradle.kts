@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":"))
+    implementation(libs.arrow.core)
     implementation(libs.arrow.functions)
     implementation(libs.hoplite.core)
     implementation(libs.hoplite.hocon)

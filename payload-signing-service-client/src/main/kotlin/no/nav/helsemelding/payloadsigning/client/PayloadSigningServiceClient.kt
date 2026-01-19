@@ -1,5 +1,6 @@
 package no.nav.helsemelding.payloadsigning.client
 
+import arrow.core.Either
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -24,7 +25,7 @@ class PayloadSigningServiceClient(
 ) {
     private var httpClient = clientProvider.invoke()
 
-    suspend fun signPayload(payloadRequest: PayloadRequest): Pair<PayloadResponse?, MessageSigningError?> {
+    suspend fun signPayload(payloadRequest: PayloadRequest): Either<MessageSigningError, PayloadResponse> {
         val url = "$payloadSigningServiceUrl/payload"
 
         val response = httpClient.post(url) {
@@ -37,10 +38,10 @@ class PayloadSigningServiceClient(
                 code = response.status.value,
                 message = response.bodyAsText()
             )
-            return Pair(null, messageSigningError)
+            return Either.Left(messageSigningError)
         }
 
-        return Pair(response.body(), null)
+        return Either.Right(response.body())
     }
 
     fun close() = httpClient.close()
