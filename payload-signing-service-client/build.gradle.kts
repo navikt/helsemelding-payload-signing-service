@@ -21,6 +21,7 @@ dependencies {
 
     testImplementation(testLibs.bundles.kotest)
     testImplementation(testLibs.ktor.client.mock)
+    testImplementation(testLibs.kotest.assertions.arrow)
     testImplementation(kotlin("test"))
 }
 

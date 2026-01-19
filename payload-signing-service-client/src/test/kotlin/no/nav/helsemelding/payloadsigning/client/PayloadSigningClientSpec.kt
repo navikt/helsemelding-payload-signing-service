@@ -1,8 +1,10 @@
 package no.nav.helsemelding.payloadsigning.client
 
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import io.kotest.matchers.equals.shouldBeEqual
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -35,7 +37,7 @@ class PayloadSigningClientSpec : StringSpec(
                 bytes = payloadBytes,
                 direction = Direction.OUT
             )
-            val payloadResponse = PayloadResponse(bytes = payloadBytes)
+            val expectedPayloadResponse = PayloadResponse(bytes = payloadBytes)
 
             val client = payloadSigningServiceClient {
                 fakeScopedAuthHttpClient { request ->
@@ -43,7 +45,7 @@ class PayloadSigningClientSpec : StringSpec(
                     request.url.fullPath shouldBeEqual "/payload"
 
                     respond(
-                        content = JsonUtil.encodeToString(payloadResponse),
+                        content = JsonUtil.encodeToString(expectedPayloadResponse),
                         headers = headersOf(ContentType, Json.toString()),
                         status = HttpStatusCode.OK
                     )
@@ -52,9 +54,8 @@ class PayloadSigningClientSpec : StringSpec(
 
             val response = client.signPayload(payloadRequest)
 
-            response.shouldNotBeNull()
-            response.isRight() shouldBe true
-            response.getOrNull()!!.bytes shouldBe payloadResponse.bytes
+            val actualPayloadResponse = response.shouldBeRight()
+            actualPayloadResponse shouldBeEqualUsingFields expectedPayloadResponse
         }
 
         "signPayload returns MessageSigningError when payload signing fails" {
@@ -85,11 +86,8 @@ class PayloadSigningClientSpec : StringSpec(
 
                 val response = client.signPayload(payloadRequest)
 
-                response.shouldNotBeNull()
-                response.isLeft() shouldBe true
-
-                val error = response.leftOrNull()
-                error!!.code shouldBe status.value
+                val error = response.shouldBeLeft()
+                error.code shouldBe status.value
                 error.message shouldBe message
             }
         }
