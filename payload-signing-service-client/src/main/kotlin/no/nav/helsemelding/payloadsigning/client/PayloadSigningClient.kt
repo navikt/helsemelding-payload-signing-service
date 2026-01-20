@@ -53,7 +53,6 @@ class HttpPayloadSigningClient(
 }
 
 suspend fun HttpResponse.withLogging(): HttpResponse {
-    val body = this.bodyAsText()
-    log.debug { "Response from ${request.method} ${request.url} is $status: $body" }
+    log.debug { "Response from ${request.method} ${request.url} is $status" }
     return this
 }
