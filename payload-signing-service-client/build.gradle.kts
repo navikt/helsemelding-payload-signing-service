@@ -47,7 +47,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             groupId = "no.nav.helsemelding"
-            artifactId = "payload-signing-service-client"
+            artifactId = "payload-signing-client"
             version = "0.0.1-SNAPSHOT-1"
             from(components["java"])
         }

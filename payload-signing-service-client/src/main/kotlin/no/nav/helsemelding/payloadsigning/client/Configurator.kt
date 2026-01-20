@@ -8,7 +8,7 @@ import com.sksamuel.hoplite.addResourceSource
 @OptIn(ExperimentalHoplite::class)
 internal val config: () -> Config = {
     ConfigLoader.builder()
-        .addResourceSource("/payload-signing-service-client.conf")
+        .addResourceSource("/payload-signing-client.conf")
         .withExplicitSealedTypes()
         .build()
         .loadConfigOrThrow<Config>()
