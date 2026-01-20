@@ -1,0 +1,64 @@
+plugins {
+    kotlin("jvm")
+    kotlin("plugin.serialization") version "2.1.10"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("maven-publish")
+}
+
+dependencies {
+    implementation(project(":"))
+    implementation(libs.arrow.core)
+    implementation(libs.arrow.functions)
+    implementation(libs.hoplite.core)
+    implementation(libs.hoplite.hocon)
+    implementation(libs.ktor.client.core)
+    implementation(libs.nimbus.jwt)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.auth)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.kotlin.logging)
+
+    testImplementation(testLibs.bundles.kotest)
+    testImplementation(testLibs.ktor.client.mock)
+    testImplementation(testLibs.kotest.assertions.arrow)
+    testImplementation(kotlin("test"))
+}
+
+tasks {
+    register<Wrapper>("wrapper") {
+        gradleVersion = "8.1.1"
+    }
+    test {
+        useJUnitPlatform()
+    }
+    ktlintFormat {
+        this.enabled = true
+    }
+    ktlintCheck {
+        dependsOn("ktlintFormat")
+    }
+    build {
+        dependsOn("ktlintCheck")
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "no.nav.helsemelding"
+            artifactId = "payload-signing-client"
+            version = "0.0.1-SNAPSHOT-1"
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/navikt/${rootProject.name}")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}

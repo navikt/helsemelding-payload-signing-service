@@ -53,9 +53,12 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.kotlin.logging)
     implementation(libs.bundles.bouncycastle)
+    implementation(libs.token.validation.ktor.v3)
 
     testImplementation(testLibs.bundles.kotest)
     testImplementation(testLibs.ktor.server.test.host)
+    testImplementation(testLibs.mock.oauth2.server)
+    testImplementation("io.mockk:mockk:1.13.7")
     testImplementation(kotlin("test"))
 }
 
