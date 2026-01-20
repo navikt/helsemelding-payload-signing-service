@@ -117,4 +117,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "helsemelding-payload-signing-service"
 
-include("payload-signing-service-client")
+include("payload-signing-client")
