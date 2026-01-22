@@ -43,7 +43,7 @@ publishing {
         create<MavenPublication>("mavenJava") {
             groupId = "no.nav.helsemelding"
             artifactId = "payload-signing-model"
-            version = "0.0.1-SNAPSHOT-3"
+            version = "0.0.1"
             from(components["java"])
         }
     }
