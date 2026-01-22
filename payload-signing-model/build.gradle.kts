@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization") version "2.1.10"
@@ -6,23 +8,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":"))
-    implementation(libs.arrow.core)
-    implementation(libs.arrow.functions)
-    implementation(libs.hoplite.core)
-    implementation(libs.hoplite.hocon)
-    implementation(libs.ktor.client.core)
-    implementation(libs.nimbus.jwt)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.auth)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.kotlin.logging)
-
-    testImplementation(testLibs.bundles.kotest)
-    testImplementation(testLibs.ktor.client.mock)
-    testImplementation(testLibs.kotest.assertions.arrow)
-    testImplementation(kotlin("test"))
+    implementation(libs.kotlinx.serialization.json)
 }
 
 tasks {
@@ -43,12 +29,21 @@ tasks {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+        freeCompilerArgs = listOf(
+            "-opt-in=kotlin.uuid.ExperimentalUuidApi,kotlin.time.ExperimentalTime"
+        )
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             groupId = "no.nav.helsemelding"
-            artifactId = "payload-signing-client"
-            version = "0.0.1-SNAPSHOT-1"
+            artifactId = "payload-signing-model"
+            version = "0.0.1"
             from(components["java"])
         }
     }

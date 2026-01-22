@@ -1,4 +1,4 @@
-package no.nav.helsemelding.payloadsigning.client.model
+package no.nav.helsemelding.payloadsigning.model
 
 data class MessageSigningError(
     val code: Int,

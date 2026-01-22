@@ -1,4 +1,4 @@
-name: "Publish payload-signing-service-client library"
+name: "Publish payload-signing-client library"
 on:
   release:
     types: [published]
@@ -27,14 +27,34 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: "Build and tests payload-signing-service-client"
-      run: ./gradlew :payload-signing-service-client:test  :payload-signing-service-client:build
+    - name: "Build and tests payload-signing-model"
+      run: ./gradlew :payload-signing-model:test  :payload-signing-model:build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USERNAME: x-access-token
+    - name: "Build and tests payload-signing-client"
+      run: ./gradlew :payload-signing-client:test  :payload-signing-client:build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_USERNAME: x-access-token
 
-    - name: "Publish payload-signing-service-client to GitHub Packages"
-      run: ./gradlew --stacktrace :payload-signing-service-client:publish
+    - name: "Show payload-signing-model version"
+      run: |
+        VERSION=$(grep 'version =' payload-signing-model/build.gradle.kts | awk -F'"' '{print $2}')
+        echo "Publishing payload-signing-model version: $VERSION"
+    - name: "Publish payload-signing-model to GitHub Packages"
+      run: ./gradlew --stacktrace :payload-signing-model:publish
+      continue-on-error: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USERNAME: x-access-token
+
+    - name: "Show payload-signing-client version"
+      run: |
+        VERSION=$(grep 'version =' payload-signing-client/build.gradle.kts | awk -F'"' '{print $2}')
+        echo "Publishing payload-signing-client version: $VERSION"
+    - name: "Publish payload-signing-client to GitHub Packages"
+      run: ./gradlew --stacktrace :payload-signing-client:publish
       continue-on-error: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

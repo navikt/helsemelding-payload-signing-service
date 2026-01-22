@@ -24,6 +24,7 @@ dependencyResolutionManagement {
             version("logback", "1.4.11")
             version("logstash", "7.4")
             version("bouncycastle", "1.76")
+            version("kotlinx-serialization", "1.9.0")
 
             library("arrow-core", "io.arrow-kt", "arrow-core").versionRef("arrow")
             library("arrow-functions", "io.arrow-kt", "arrow-functions").versionRef("arrow")
@@ -73,6 +74,8 @@ dependencyResolutionManagement {
             bundle("prometheus", listOf("ktor-server-metrics-micrometer", "micrometer-registry-prometheus"))
             bundle("logging", listOf("logback-classic", "logback-logstash"))
             bundle("bouncycastle", listOf("bcpkix-jdk18on", "bcprov-jdk18on"))
+
+            library("kotlinx-serialization-json", "org.jetbrains.kotlinx", "kotlinx-serialization-json").versionRef("kotlinx-serialization")
         }
 
         create("testLibs") {
@@ -117,4 +120,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "helsemelding-payload-signing-service"
 
-include("payload-signing-service-client")
+include("payload-signing-client")
+
+include("payload-signing-model")

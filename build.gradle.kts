@@ -37,6 +37,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
 }
 
 dependencies {
+    api(project(":payload-signing-model"))
     implementation(libs.arrow.functions)
     implementation(libs.arrow.suspendapp)
     implementation(libs.arrow.suspendapp.ktor)
