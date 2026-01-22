@@ -32,7 +32,7 @@ Shared model definitions used by client and server.
 See: [payload-signing-model/README.md](payload-signing-model/README.md)
 
 ### payload-signing-client
-Reusable HTTP client for Payload Signing Service.
+Reusable HTTP client for Payload Signing Service.  
 See: [payload-signing-client/README.md](payload-signing-client/README.md)
 
 
