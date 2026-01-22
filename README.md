@@ -9,6 +9,7 @@ The keystore file and the file password are retrieved from **Kubernetes Secrets*
 ---
 
 ## Architecture
+
 The service consists of the following main components:
 
 - **ProcessingService**  
@@ -28,10 +29,12 @@ The service consists of the following main components:
 | `payload-signing-client` | Reusable HTTP client for Payload Signing Service   |
 
 ### payload-signing-model
+
 Shared model definitions used by client and server.  
 See: [payload-signing-model/README.md](payload-signing-model/README.md)
 
 ### payload-signing-client
+
 Reusable HTTP client for Payload Signing Service.  
 See: [payload-signing-client/README.md](payload-signing-client/README.md)
 

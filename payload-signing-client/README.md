@@ -3,12 +3,14 @@
 Kotlin client library for interacting with the Payload Signing Service.
 
 ## Purpose
+
 Simplify integration with `helsemelding-payload-signing-service` by hiding HTTP, serialization and error handling from consumers
 
 ## Usage
+
 ```
 val scope = "api://dev-gcp.helsemelding.payload-signing-service/.default"
-val payloadSigningServiceUrl = "https://helsemelding-payload-signing-service.intern.dev.nav.no"
+val payloadSigningServiceUrl = "http://payload-signing-service"
 
 val scopedClient = scopedAuthHttpClient(scope)
 val payloadSigningClient = HttpPayloadSigningClient(scopedClient, payloadSigningServiceUrl)
