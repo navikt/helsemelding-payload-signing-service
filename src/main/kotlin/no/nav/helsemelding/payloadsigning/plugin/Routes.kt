@@ -15,6 +15,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import io.opentelemetry.api.trace.Span
 import no.nav.helsemelding.payloadsigning.config
 import no.nav.helsemelding.payloadsigning.model.Direction
 import no.nav.helsemelding.payloadsigning.model.PayloadRequest
@@ -65,6 +66,8 @@ fun Route.externalRoutes(processingService: ProcessingService) {
 
 fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
     val request = call.receive<PayloadRequest>()
+
+    Span.current().setAttribute("signingservice.postpayload", "Request received")
 
     val result: Either<ProcessingError, PayloadResponse> = when (request.direction) {
         Direction.IN -> processingService.processIncoming(request)

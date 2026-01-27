@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.kotlin.logging)
     implementation(libs.bundles.bouncycastle)
     implementation(libs.token.validation.ktor.v3)
+    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:2.16.0-alpha")
 
     testImplementation(testLibs.bundles.kotest)
     testImplementation(testLibs.ktor.server.test.host)

@@ -12,11 +12,14 @@
             </jsonGeneratorDecorator>
         </encoder>
     </appender>
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+        <appender-ref ref="stdout_json" />
+    </appender>
 
     <logger name="no.nav" level="DEBUG"/>
     <logger name="io.ktor" level="INFO"/>
 
     <root level="INFO">
-        <appender-ref ref="stdout_json"/>
+        <appender-ref ref="OTEL"/>
     </root>
 </configuration>
