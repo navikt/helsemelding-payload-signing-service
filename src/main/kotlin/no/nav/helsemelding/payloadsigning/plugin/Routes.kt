@@ -65,6 +65,7 @@ fun Route.externalRoutes(processingService: ProcessingService) {
 
 fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
     val request = call.receive<PayloadRequest>()
+    log.debug { "PayloadRequest request received" }
 
     val result: Either<ProcessingError, PayloadResponse> = when (request.direction) {
         Direction.IN -> processingService.processIncoming(request)

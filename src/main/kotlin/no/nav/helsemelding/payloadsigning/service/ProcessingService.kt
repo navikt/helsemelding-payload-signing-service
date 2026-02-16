@@ -32,15 +32,19 @@ class ProcessingService(
 
     fun processOutgoing(request: PayloadRequest): Either<ProcessingError, PayloadResponse> =
         either {
+            log.info { "Processing outgoing payload..." }
+
             val xmlDocument =
                 Either.catch { request.bytes.toXmlDocument() }
                     .mapLeft(ProcessingError::XmlParseFailed)
                     .bind()
+            log.info { "XML document is parsed" }
 
             val signedDocument =
                 signingService.signXml(xmlDocument)
                     .mapLeft(ProcessingError::SigningFailed)
                     .bind()
+            log.info { "XML document is signed" }
 
             PayloadResponse(signedDocument.toByteArray())
         }
