@@ -21,6 +21,8 @@ import no.nav.helsemelding.payloadsigning.model.PayloadRequest
 import no.nav.helsemelding.payloadsigning.model.PayloadResponse
 import no.nav.helsemelding.payloadsigning.service.ProcessingError
 import no.nav.helsemelding.payloadsigning.service.ProcessingService
+import no.nav.helsemelding.payloadsigning.service.SignXmlError
+import kotlin.random.Random
 
 private val log = KotlinLogging.logger {}
 
@@ -66,6 +68,20 @@ fun Route.externalRoutes(processingService: ProcessingService) {
 fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
     val request = call.receive<PayloadRequest>()
     log.debug { "PayloadRequest request received" }
+
+    // Simulate error with given probability
+    if (Random.nextDouble() < 0.2) {
+        log.warn { "Simulated error triggered for /payload endpoint" }
+        val simulatedError = ProcessingError.SigningFailed(
+            SignXmlError.SignatureFailed(
+                "Simulated error",
+                Throwable("Simulated")
+            )
+        )
+        val (status, body) = simulatedError.toHttpResponse()
+        call.respond(status, body)
+        return@post
+    }
 
     val result: Either<ProcessingError, PayloadResponse> = when (request.direction) {
         Direction.IN -> processingService.processIncoming(request)
