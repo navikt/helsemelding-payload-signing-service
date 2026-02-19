@@ -70,7 +70,7 @@ fun Route.postPayload(processingService: ProcessingService) = post("/payload") {
     log.debug { "PayloadRequest request received" }
 
     // Simulate error with given probability
-    if (System.getenv("NAIS_CLUSTER_NAME") == "dev-gcp" && Random.nextDouble() < 0.2) {
+    if (System.getenv("NAIS_CLUSTER_NAME") == "dev-gcp" && Random.nextDouble() < 0.1) {
         log.warn { "Simulated error triggered for /payload endpoint" }
         val simulatedError = ProcessingError.SigningFailed(
             SignXmlError.SignatureFailed(
