@@ -15,6 +15,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import kotlinx.serialization.Serializable
 import no.nav.helsemelding.payloadsigning.config
 import no.nav.helsemelding.payloadsigning.model.Direction
 import no.nav.helsemelding.payloadsigning.model.PayloadRequest
@@ -24,6 +25,7 @@ import no.nav.helsemelding.payloadsigning.service.ProcessingService
 
 private val log = KotlinLogging.logger {}
 
+@Serializable
 data class ErrorResponse(val error: String)
 
 fun Application.configureRoutes(
