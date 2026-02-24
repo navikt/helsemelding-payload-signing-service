@@ -58,7 +58,7 @@ spec:
     outbound:
     inbound:
       rules:
-        - application: state-service
+        - application: outbound-message-service
           cluster: dev-gcp
   envFrom:
     - secret: helsemelding-keystore-pwd
