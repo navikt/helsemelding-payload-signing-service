@@ -25,6 +25,10 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+java {
+    withSourcesJar()
+}
+
 tasks {
     register<Wrapper>("wrapper") {
         gradleVersion = "8.1.1"
@@ -48,7 +52,7 @@ publishing {
         create<MavenPublication>("mavenJava") {
             groupId = "no.nav.helsemelding"
             artifactId = "payload-signing-client"
-            version = "0.0.1"
+            version = "0.0.2-SNAPSHOT"
             from(components["java"])
         }
     }

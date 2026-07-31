@@ -18,18 +18,51 @@ import no.nav.helsemelding.payloadsigning.model.PayloadResponse
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Client for signing and verifying EDI message payloads via the Payload Signing Service.
+ *
+ * All operations return [Either] where [Either.Left] contains a [MessageSigningError]
+ * on failure, and [Either.Right] contains the successful result.
+ *
+ */
 interface PayloadSigningClient {
+    /**
+     * Signs or verifies a message payload.
+     *
+     * @param payloadRequest the payload bytes and direction (required)
+     * @return a [PayloadResponse] containing the processed bytes, or a [MessageSigningError] on failure
+     */
     suspend fun signPayload(payloadRequest: PayloadRequest): Either<MessageSigningError, PayloadResponse>
 
+    /**
+     * Closes the underlying HTTP client and releases resources.
+     *
+     * Should be called when the client is no longer needed to free connections.
+     */
     fun close()
 }
 
+/**
+ * HTTP-based implementation of [PayloadSigningClient].
+ *
+ * Communicates with the Payload Signing Service over HTTP using the provided [HttpClient].
+ * Use [scopedAuthHttpClient] to create a pre-configured client with Azure AD bearer token support.
+ *
+ * @param clientProvider factory function that creates the underlying [HttpClient]
+ * @param payloadSigningServiceUrl base URL of the Payload Signing Service
+ */
 class HttpPayloadSigningClient(
     clientProvider: () -> HttpClient,
     private val payloadSigningServiceUrl: String = config().payloadSigningService.url.toString()
 ) : PayloadSigningClient {
     private var httpClient = clientProvider.invoke()
 
+    /**
+     * Signs or verifies a message payload.
+     *
+     * @param payloadRequest the payload bytes and direction (required)
+     * @return a [PayloadResponse] containing the processed bytes, or a [MessageSigningError] on failure
+     */
     override suspend fun signPayload(payloadRequest: PayloadRequest): Either<MessageSigningError, PayloadResponse> {
         val url = "$payloadSigningServiceUrl/payload"
 
@@ -49,6 +82,11 @@ class HttpPayloadSigningClient(
         return Either.Right(response.body())
     }
 
+    /**
+     * Closes the underlying HTTP client and releases resources.
+     *
+     * Should be called when the client is no longer needed to free connections.
+     */
     override fun close() = httpClient.close()
 }
 
