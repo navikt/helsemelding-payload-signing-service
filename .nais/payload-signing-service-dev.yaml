@@ -58,8 +58,6 @@ spec:
     outbound:
     inbound:
       rules:
-        - application: outbound-message-service
-          cluster: dev-gcp
         - application: outbound-processing-service
           cluster: dev-gcp
   envFrom:
